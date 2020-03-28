@@ -15,7 +15,7 @@ uf varchar(2) not null
 CREATE TABLE telefone_responsavel (
 telefone int(8) not null,
 cpf varchar(11) not null,
-foreign key (cpf) references responsavel (cpf) on update cascade on delete cascade,
+foreign key (cpf) references responsavel (cpf),
 primary key(telefone)
 );
 
@@ -29,8 +29,8 @@ primary key (codigo_funcionario)
 CREATE TABLE responsavel_funcionario (
 cpf varchar(11) not null,
 codigo_funcionario varchar(4) not null,
-constraint fk_cpf foreign key (cpf) references responsavel(cpf) on update cascade on delete cascade,
-constraint fk_codigo_funcionario foreign key (codigo_funcionario) references funcionario(codigo_funcionario) on update cascade on delete cascade,
+constraint fk_cpf foreign key (cpf) references responsavel(cpf),
+constraint fk_codigo_funcionario foreign key (codigo_funcionario) references funcionario(codigo_funcionario),
 constraint pk_responsavel_funcionario primary key (cpf,codigo_funcionario)
 );
 
@@ -60,16 +60,16 @@ uf varchar(2) not null,
 matricula varchar(8) not null,
 codigo_funcionario varchar(4) not null,
 primary key (cnpj),
-constraint fk_matricula_ foreign key (matricula) references aluno(matricula) on update cascade on delete cascade,
-constraint fk_codigo_funcionario_ foreign key (codigo_funcionario) references funcionario(codigo_funcionario) on update cascade on delete cascade
+constraint fk_matricula_ foreign key (matricula) references aluno(matricula),
+constraint fk_codigo_funcionario_ foreign key (codigo_funcionario) references funcionario(codigo_funcionario)
 );
 
 CREATE TABLE responsavel_creche (
 cpf varchar(11) not null,
 cnpj varchar(14) not null,
 primary key (cpf,cnpj),
-constraint fk_cpf_ foreign key (cpf) references responsavel(cpf) on update cascade on delete cascade,
-constraint fk_cnpj foreign key (cnpj) references creche(cnpj) on update cascade on delete cascade
+constraint fk_cpf_ foreign key (cpf) references responsavel(cpf),
+constraint fk_cnpj foreign key (cnpj) references creche(cnpj)
 );
 
 /* Adicionando valores na tabela responsavel */
@@ -87,8 +87,6 @@ VALUES ('Felipe Queiroz Mattos', '91627912781', 'felipe_queiroz05@gmail.com', 'R
 
 INSERT INTO responsavel (nome_completo, cpf, email, rua, bairro, cidade, uf) 
 VALUES ('Diego Augusto Sabino Moreira', '85671439832', 'diegoasm@gmail.com', 'Rua Paraná nº 43', 'Jardim Brasil', 'Olinda', 'PE');
-
-
 
 /* inserindo valores na tabela telefone_responsavel */
 
@@ -138,7 +136,7 @@ INSERT INTO creche (nome, razao_social, cnpj, telefone, rua, bairro, cidade, uf,
 
 INSERT INTO creche (nome, razao_social, cnpj, telefone, rua, bairro, cidade, uf, matricula, codigo_funcionario) VALUES ('Creche Lar da Criança', 'Creche Municipal Lar da Criança', '20836508000131', 86450116, 'Rua Um nº 100', 'Charnequinha', 'Cabo de Santo Agostinho', 'PE', '14037766', '3');
 
-INSERT INTO creche (nome, razao_social, cnpj, telefone, rua, bairro, cidade, uf, matricula, codigo_funcionario) VALUES ('Creche Maria Alice Guerra', 'Creche Municipal Maria Alice Gonçalves Guerra', '21503000696', 30271474, 'Avenida Josadack Alves de França', 'Santa Mônica', 'Camaragibe', 'PE', '13812493', '4');
+INSERT INTO creche (nome, razao_social, cnpj, telefone, rua, bairro, cidade, uf, matricula, codigo_funcionario) VALUES ('Creche Maria Alice Guerra', 'Creche Municipal Maria Alice Gonçalves Guerra', '21503000696787', 30271474, 'Avenida Josadack Alves de França', 'Santa Mônica', 'Camaragibe', 'PE', '13812493', '4');
 
 INSERT INTO creche (nome, razao_social, cnpj, telefone, rua, bairro, cidade, uf, matricula, codigo_funcionario) VALUES ('Creche Menino Jesus de Casa Forte', 'Creche Beneficente Menino Jesus de Casa Forte', '30149307000121', 32681025, 'Rua Samuel de Farias', 'Casa Forte', 'Recife', 'PE', '01272130', '5');
 
@@ -147,5 +145,5 @@ INSERT INTO creche (nome, razao_social, cnpj, telefone, rua, bairro, cidade, uf,
 INSERT INTO responsavel_creche (cpf, cnpj) VALUES ('87651245679', '26153130186501');
 INSERT INTO responsavel_creche (cpf, cnpj) VALUES ('07891719281', '26170736986545');
 INSERT INTO responsavel_creche (cpf, cnpj) VALUES ('08198146732', '20836508000131');
-INSERT INTO responsavel_creche (cpf, cnpj) VALUES ('91627912781', '21503000696282');
+INSERT INTO responsavel_creche (cpf, cnpj) VALUES ('91627912781', '21503000696787');
 INSERT INTO responsavel_creche (cpf, cnpj) VALUES ('85671439832', '30149307000121');
