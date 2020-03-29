@@ -15,25 +15,9 @@ uf varchar(2) not null
 CREATE TABLE telefone_responsavel (
 telefone int(8) not null,
 cpf varchar(11) not null,
-foreign key (cpf) references responsavel (cpf),
+foreign key (cpf) references responsavel (cpf) on delete cascade on update cascade,
 primary key(telefone)
 );
-
-CREATE TABLE funcionario (
-nome varchar(100) not null,
-codigo_funcionario varchar(100) not null,
-cargo varchar(50) not null,
-primary key (codigo_funcionario)
-);
-
-CREATE TABLE responsavel_funcionario (
-cpf varchar(11) not null,
-codigo_funcionario varchar(4) not null,
-constraint fk_cpf foreign key (cpf) references responsavel(cpf),
-constraint fk_codigo_funcionario foreign key (codigo_funcionario) references funcionario(codigo_funcionario),
-constraint pk_responsavel_funcionario primary key (cpf,codigo_funcionario)
-);
-
 
 CREATE TABLE aluno (
 nome_completo varchar(100) not null,
@@ -58,18 +42,33 @@ bairro varchar(100) not null,
 cidade varchar(100) not null,
 uf varchar(2) not null,
 matricula varchar(8) not null,
-codigo_funcionario varchar(4) not null,
 primary key (cnpj),
-constraint fk_matricula_ foreign key (matricula) references aluno(matricula),
-constraint fk_codigo_funcionario_ foreign key (codigo_funcionario) references funcionario(codigo_funcionario)
+constraint fk_aluno_creche foreign key (matricula) references aluno(matricula) on delete cascade on update cascade
+);
+
+CREATE TABLE funcionario (
+nome varchar(100) not null,
+codigo_funcionario varchar(100) not null,
+cargo varchar(50) not null,
+cnpj varchar(14) not null,
+primary key (codigo_funcionario),
+constraint fk_creche_funcionario foreign key (cnpj) references creche (cnpj) on delete cascade on update cascade
+);
+
+CREATE TABLE responsavel_funcionario (
+cpf varchar(11) not null,
+codigo_funcionario varchar(4) not null,
+constraint fk_responsavel_responsavel_funcionario foreign key (cpf) references responsavel(cpf) on delete cascade on update cascade,
+constraint fk_funcionario_responsavel_funcionario foreign key (codigo_funcionario) references funcionario(codigo_funcionario) on delete cascade on update cascade,
+constraint pk_responsavel_funcionario primary key (cpf,codigo_funcionario)
 );
 
 CREATE TABLE responsavel_creche (
 cpf varchar(11) not null,
 cnpj varchar(14) not null,
 primary key (cpf,cnpj),
-constraint fk_cpf_ foreign key (cpf) references responsavel(cpf),
-constraint fk_cnpj foreign key (cnpj) references creche(cnpj)
+constraint fk_responsavel_responsavel_creche foreign key (cpf) references responsavel(cpf) on delete cascade on update cascade,
+constraint fk_creche_responsavel_creche foreign key (cnpj) references creche(cnpj) on delete cascade on update cascade
 );
 
 /* Adicionando valores na tabela responsavel */
@@ -88,6 +87,9 @@ VALUES ('Felipe Queiroz Mattos', '91627912781', 'felipe_queiroz05@gmail.com', 'R
 INSERT INTO responsavel (nome_completo, cpf, email, rua, bairro, cidade, uf) 
 VALUES ('Diego Augusto Sabino Moreira', '85671439832', 'diegoasm@gmail.com', 'Rua Paraná nº 43', 'Jardim Brasil', 'Olinda', 'PE');
 
+
+
+
 /* inserindo valores na tabela telefone_responsavel */
 
 INSERT INTO telefone_responsavel (telefone, cpf) VALUES ( 98692149, '87651245679');
@@ -95,26 +97,6 @@ INSERT INTO telefone_responsavel (telefone, cpf) VALUES ( 83410592, '07891719281
 INSERT INTO telefone_responsavel (telefone, cpf) VALUES ( 99147234, '08198146732');
 INSERT INTO telefone_responsavel (telefone, cpf) VALUES ( 86741327, '91627912781');
 INSERT INTO telefone_responsavel (telefone, cpf) VALUES ( 88654084, '85671439832');
-
-/* inserindo valores na tabela funcionario */
-
-INSERT INTO funcionario (nome, codigo_funcionario, cargo) VALUES ('Fátima Pereira Gomes', '1', 'Diretora');
-
-INSERT INTO funcionario (nome, codigo_funcionario, cargo) VALUES ('Carla Fernanda Monteiro', '2', 'Professora');
-
-INSERT INTO funcionario (nome, codigo_funcionario, cargo) VALUES ('Elias Muniz Bezerra da Silva', '3', 'Secretário');
-
-INSERT INTO funcionario (nome, codigo_funcionario, cargo) VALUES ('Allysson Breno Ferreira', '4', 'Porteiro');
-
-INSERT INTO funcionario (nome, codigo_funcionario, cargo) VALUES ('Patrícia Silveira Cordeiro', '5', 'Monitora');
-
-/* inserindo valores na tabela responsavel_funcionario */
-
-INSERT INTO responsavel_funcionario (cpf, codigo_funcionario) VALUES ('87651245679', '1');
-INSERT INTO responsavel_funcionario (cpf, codigo_funcionario) VALUES ('07891719281', '2');
-INSERT INTO responsavel_funcionario (cpf, codigo_funcionario) VALUES ('08198146732', '3');
-INSERT INTO responsavel_funcionario (cpf, codigo_funcionario) VALUES ('91627912781', '4');
-INSERT INTO responsavel_funcionario (cpf, codigo_funcionario) VALUES ('85671439832', '5');
 
 /* inserindo valores na tabela aluno */
 
@@ -130,15 +112,35 @@ INSERT INTO aluno (nome_completo, matricula, dt_nascimento, sexo, rua, bairro, c
 
 /* inserindo valores na tabela creche */
 
-INSERT INTO creche (nome, razao_social, cnpj, telefone, rua, bairro, cidade, uf, matricula, codigo_funcionario) VALUES ('Creche Recife 2000', 'Creche Municipal Recife 2000', '26153130186501', 33553776, 'Rua Rio Solimões', 'Areias', 'Recife', 'PE', '01243810', '1');
+INSERT INTO creche (nome, razao_social, cnpj, telefone, rua, bairro, cidade, uf, matricula) VALUES ('Creche Recife 2000', 'Creche Municipal Recife 2000', '26153130186501', 33553776, 'Rua Rio Solimões', 'Areias', 'Recife', 'PE', '01243810');
 
-INSERT INTO creche (nome, razao_social, cnpj, telefone, rua, bairro, cidade, uf, matricula, codigo_funcionario) VALUES ('Creche Esperança', 'Creche Municipal Esperança', '26170736986545', 32327527, 'Rua Leila Félix Karan', 'San Martin', 'Recife', 'PE', '15544950', '2');
+INSERT INTO creche (nome, razao_social, cnpj, telefone, rua, bairro, cidade, uf, matricula) VALUES ('Creche Esperança', 'Creche Municipal Esperança', '26170736986545', 32327527, 'Rua Leila Félix Karan', 'San Martin', 'Recife', 'PE', '15544950');
 
-INSERT INTO creche (nome, razao_social, cnpj, telefone, rua, bairro, cidade, uf, matricula, codigo_funcionario) VALUES ('Creche Lar da Criança', 'Creche Municipal Lar da Criança', '20836508000131', 86450116, 'Rua Um nº 100', 'Charnequinha', 'Cabo de Santo Agostinho', 'PE', '14037766', '3');
+INSERT INTO creche (nome, razao_social, cnpj, telefone, rua, bairro, cidade, uf, matricula) VALUES ('Creche Lar da Criança', 'Creche Municipal Lar da Criança', '20836508000131', 86450116, 'Rua Um nº 100', 'Charnequinha', 'Cabo de Santo Agostinho', 'PE', '14037766');
 
-INSERT INTO creche (nome, razao_social, cnpj, telefone, rua, bairro, cidade, uf, matricula, codigo_funcionario) VALUES ('Creche Maria Alice Guerra', 'Creche Municipal Maria Alice Gonçalves Guerra', '21503000696787', 30271474, 'Avenida Josadack Alves de França', 'Santa Mônica', 'Camaragibe', 'PE', '13812493', '4');
+INSERT INTO creche (nome, razao_social, cnpj, telefone, rua, bairro, cidade, uf, matricula) VALUES ('Creche Maria Alice Guerra', 'Creche Municipal Maria Alice Gonçalves Guerra', '21503000696787', 30271474, 'Avenida Josadack Alves de França', 'Santa Mônica', 'Camaragibe', 'PE', '13812493');
 
-INSERT INTO creche (nome, razao_social, cnpj, telefone, rua, bairro, cidade, uf, matricula, codigo_funcionario) VALUES ('Creche Menino Jesus de Casa Forte', 'Creche Beneficente Menino Jesus de Casa Forte', '30149307000121', 32681025, 'Rua Samuel de Farias', 'Casa Forte', 'Recife', 'PE', '01272130', '5');
+INSERT INTO creche (nome, razao_social, cnpj, telefone, rua, bairro, cidade, uf, matricula) VALUES ('Creche Menino Jesus de Casa Forte', 'Creche Beneficente Menino Jesus de Casa Forte', '30149307000121', 32681025, 'Rua Samuel de Farias', 'Casa Forte', 'Recife', 'PE', '01272130');
+
+/* inserindo valores na tabela funcionario */
+
+INSERT INTO funcionario (nome, codigo_funcionario, cargo, cnpj) VALUES ('Fátima Pereira Gomes', '1', 'Diretora', '26153130186501');
+
+INSERT INTO funcionario (nome, codigo_funcionario, cargo, cnpj) VALUES ('Carla Fernanda Monteiro', '2', 'Professora', '26170736986545');
+
+INSERT INTO funcionario (nome, codigo_funcionario, cargo, cnpj) VALUES ('Elias Muniz Bezerra da Silva', '3', 'Secretário', '20836508000131');
+
+INSERT INTO funcionario (nome, codigo_funcionario, cargo, cnpj) VALUES ('Allysson Breno Ferreira', '4', 'Porteiro', '21503000696787');
+
+INSERT INTO funcionario (nome, codigo_funcionario, cargo, cnpj) VALUES ('Patrícia Silveira Cordeiro', '5', 'Monitora', '30149307000121');
+
+/* inserindo valores na tabela responsavel_funcionario */
+
+INSERT INTO responsavel_funcionario (cpf, codigo_funcionario) VALUES ('87651245679', '1');
+INSERT INTO responsavel_funcionario (cpf, codigo_funcionario) VALUES ('07891719281', '2');
+INSERT INTO responsavel_funcionario (cpf, codigo_funcionario) VALUES ('08198146732', '3');
+INSERT INTO responsavel_funcionario (cpf, codigo_funcionario) VALUES ('91627912781', '4');
+INSERT INTO responsavel_funcionario (cpf, codigo_funcionario) VALUES ('85671439832', '5');
 
 /* inserindo valores na tabela responsavel_creche */
 
@@ -147,3 +149,55 @@ INSERT INTO responsavel_creche (cpf, cnpj) VALUES ('07891719281', '2617073698654
 INSERT INTO responsavel_creche (cpf, cnpj) VALUES ('08198146732', '20836508000131');
 INSERT INTO responsavel_creche (cpf, cnpj) VALUES ('91627912781', '21503000696787');
 INSERT INTO responsavel_creche (cpf, cnpj) VALUES ('85671439832', '30149307000121');
+
+/* criando comandos delete */
+
+/* deletando vínculo de responsável com funcionário*/
+delete from responsavel_funcionario where cpf = '87651245679' and codigo_funcionario = '1';
+
+/* deletando responsavel*/
+delete from responsavel where cpf = '87651245679';
+
+/* deletando vínculo de responsavel com creche */
+delete from responsavel_creche where cpf = '07891719281' and cnpj = '26170736986545';
+
+/* deletando creche */
+delete from creche where cnpj = '26170736986545';
+
+/* deletando aluno */
+delete from aluno where matricula = '01243810';
+
+/* criando comandos update */
+
+/* atualizar nome da tabela responsavel */
+update responsavel set nome_completo = 'Luiz Carlos' where cpf = '08198146732';
+
+/* atualizar telefone da tabela telefone_responsavel */
+update telefone_responsavel set telefone = 87143492 where cpf = '08198146732';
+
+/* atualizar cnpj da tabela creche */
+update creche set cnpj = '87234878734234' where cnpj = '30149307000121';
+
+/* atualizar data de nascimento de aluno */
+update aluno set dt_nascimento = 2018/11/05 where matricula = '15544950';
+
+/* atualizar cargo da tabela funcionario */
+update funcionario set cargo = 'Diretor' where codigo_funcionario = '3';
+
+/* adicionando selects */
+
+/* selecionando nomes de alunos do sexo masculino ordenados por nome*/
+select nome_completo from aluno where sexo = "M" order by nome_completo;
+
+/* selecionando as creches localizadas em recife*/
+select * from creche where cidade like '%Recife%';
+
+/* selecionando o número do telefone do responsavel que tenha michele como primeiro nome */
+select res.nome_completo, tel.telefone from responsavel res,telefone_responsavel tel where tel.cpf = res.cpf and res.nome_completo like 'Michele%';
+
+/* selecionado os alunos que moram em recife*/
+select * from aluno where cidade = 'Recife';
+
+/* selecionando creches em que o responsavel Diego está relacionado */
+select cre.cnpj, cre.nome, res.nome_completo from responsavel res, responsavel_creche rec, creche cre where res.nome_completo like 'Diego%'
+and res.cpf = rec.cpf and rec.cnpj = cre.cnpj;
