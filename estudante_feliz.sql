@@ -150,4 +150,33 @@ INSERT INTO responsavel_creche (cpf, cnpj) VALUES ('08198146732', '2083650800013
 INSERT INTO responsavel_creche (cpf, cnpj) VALUES ('91627912781', '21503000696787');
 INSERT INTO responsavel_creche (cpf, cnpj) VALUES ('85671439832', '30149307000121');
 
+/* Relatórios */
 
+/* 1- Listar os nomes de todos os funcinoários e de seus responsáveis. */
+SELECT fun.nome AS nome_funcionario, res.nome_completo
+FROM funcionario fun, responsavel_funcionario fre, responsavel res 
+WHERE fun.codigo_funcionario = fre.codigo_funcionario 
+AND res.cpf = fre.cpf;
+
+/*2- Listar o nome, razão social e o nome do resposável das creches do município de Recife. */
+SELECT cre.nome AS nome_creche, cre.razao_social, res.nome_completo AS nome_responsavel
+FROM responsavel res, responsavel_creche rec, creche cre 
+WHERE res.cpf = rec.cpf 
+AND cre.cnpj = rec.cnpj;
+
+/* 3- Listar nome completo, data de nascimento e matricula dos alunos sem deficiência. */
+SELECT alu.nome_completo AS nome_aluno, alu.dt_nascimento, alu.matricula 
+FROM aluno alu
+WHERE alu.tipo_deficiencia IS NULL;
+
+/*4- Apresentar a quantidde de funcionarios por creche. */
+SELECT cre.cnpj, cre.nome, COUNT(fun.nome) AS quantidade_funcionario 
+FROM creche cre, funcionario fun
+WHERE cre.cnpj = fun.cnpj group by cre.cnpj;
+
+/*5- Informar a quantidade de alunos com deficiciência, por creche. */
+
+SELECT cre.cnpj, cre.nome, COUNT(nome_completo) AS quantidade_com_deficiencia 
+FROM aluno alu, creche cre 
+WHERE cre.matricula = alu.matricula AND alu.tipo_deficiencia IS NOT NULL 
+GROUP BY cre.cnpj;
